@@ -1,0 +1,33 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "nilvoya-prototype",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "C:/nilvoya"],
+      "port": 8765,
+      "autoPort": true
+    },
+    {
+      "name": "nilvoya-b2b",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d C:\\nilvoya-next\\apps\\b2b && npx next dev --port 3010"],
+      "port": 3010,
+      "autoPort": true
+    },
+    {
+      "name": "nilvoya-admin",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d C:\\nilvoya-next\\apps\\admin && npx next dev --port 3001"],
+      "port": 3001,
+      "autoPort": true
+    },
+    {
+      "name": "nilvoya-landing",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "cd /d C:\\nilvoya-next\\apps\\landing && npx next dev --port 3002"],
+      "port": 3002,
+      "autoPort": true
+    }
+  ]
+}

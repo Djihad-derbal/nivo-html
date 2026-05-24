@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SAFIRMISR — La plateforme de réservation pour l'Égypte</title>
+  <meta name="description" content="SAFIRMISR — l'infrastructure de réservation B2B pour les voyages organisés vers l'Égypte." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:           #FFFFFF;
+      --bg-elev:      #F9FAFB;
+      --bg-dark:      #0A0A0A;
+      --text:         #0A0A0A;
+      --text-2:       #4B5563;
+      --text-3:       #6B7280;
+      --border:       #E5E7EB;
+      --border-2:     #F3F4F6;
+      --accent:       #B8430C;
+      --accent-soft:  #FBE9DE;
+      --success:      #059669;
+
+      --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+      --max:          1200px;
+      --pad:          32px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+      font-feature-settings: "ss01", "cv11";
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Layout ───────────────────────────────────────────────── */
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--pad); }
+    section { padding: 140px 0; }
+    @media (max-width: 720px) {
+      :root { --pad: 20px; }
+      section { padding: 88px 0; }
+    }
+
+    /* ── Type ─────────────────────────────────────────────────── */
+    .eyebrow {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0;
+      color: var(--accent);
+      margin: 0 0 16px;
+    }
+    h1, h2, h3, h4 { margin: 0; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
+    h1 { font-size: clamp(40px, 6vw, 72px); line-height: 1.05; letter-spacing: -0.035em; font-weight: 700; }
+    h2 { font-size: clamp(32px, 4.2vw, 48px); line-height: 1.1; letter-spacing: -0.025em; }
+    h3 { font-size: 19px; line-height: 1.4; letter-spacing: -0.01em; }
+    p  { margin: 0; color: var(--text-2); }
+    .lede { font-size: 19px; line-height: 1.55; color: var(--text-2); max-width: 560px; }
+
+    .section-head { max-width: 720px; margin: 0 0 72px; }
+    .section-head.center { margin-left: auto; margin-right: auto; text-align: center; }
+
+    /* ── Nav ───────────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 200ms ease, background 200ms ease;
+    }
+    .nav.scrolled { border-bottom-color: var(--border); }
+    .nav-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px var(--pad);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-2);
+      transition: color 160ms;
+    }
+    .nav-links a:hover { color: var(--text); }
+    @media (max-width: 760px) { .nav-links a:not(.btn) { display: none; } }
+
+    /* ── Buttons ───────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: background 160ms, color 160ms, transform 160ms;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+    }
+    .btn-primary:hover { background: #1F2937; }
+    .btn-ghost {
+      color: var(--text-2);
+    }
+    .btn-ghost:hover { color: var(--text); }
+    .btn-lg { padding: 14px 22px; font-size: 15px; border-radius: 10px; }
+    .btn .arrow { transition: transform 200ms; display: inline-block; }
+    .btn:hover .arrow { transform: translateX(3px); }
+
+    .btn-on-dark.btn-primary {
+      background: var(--bg);
+      color: var(--text);
+    }
+    .btn-on-dark.btn-primary:hover { background: #F3F4F6; }
+
+    /* ── Reveal ────────────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 600ms ease, transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.in-view { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ─────────────────────────────────────────────────────────── */
+    /*  HERO                                                       */
+    /* ─────────────────────────────────────────────────────────── */
+    .hero {
+      padding: 180px 0 120px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      /* Subtle radial accent in the corner */
+      content: "";
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    .hero-inner { max-width: 900px; }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-2);
+      margin-bottom: 28px;
+    }
+    .hero-eyebrow::before {
+      content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+    }
+    .hero h1 { margin-bottom: 24px; max-width: 14ch; }
+    .hero-sub {
+      font-size: clamp(18px, 2vw, 22px);
+      line-height: 1.5;
+      color: var(--text-2);
+      max-width: 620px;
+      margin-bottom: 40px;
+    }
+    .hero-cta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+    /* ─────────────────────────────────────────────────────────── */
+    /*  PRODUCT SHOWCASE                                            */
+    /* ─────────────────────────────────────────────────────────── */
+    .showcase {
+      background: var(--bg-elev);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 80px;
+      align-items: center;
+    }
+    @media (max-width: 880px) {
+      .showcase-grid { grid-template-columns: 1fr; gap: 56px; }
+    }
+    .showcase-copy h2 { margin-bottom: 20px; max-width: 12ch; }
+    .showcase-copy .lede { margin-bottom: 28px; }
+    .showcase-points {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 16px;
+    }
+    .showcase-points li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 15px;
+      color: var(--text-2);
+    }
+    .check {
+      flex-shrink: 0;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+    .check svg { width: 11px; height: 11px; }
+
+    /* Product mockup card */
+    .mockup {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 24px 60px -20px rgba(10,10,10,0.12);
+      overflow: hidden;
+      font-size: 12.5px;
+    }
+    .mockup-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 14px;
+      background: #FAFAFA;
+      border-bottom: 1px solid var(--border);
+    }
+    .mockup-bar .dot { width: 10px; height: 10px; border-radius: 50%; background: #E5E7EB; }
+    .mockup-bar .url {
+      margin-left: 8px;
+      font-size: 12px;
+      color: var(--text-3);
+      font-weight: 500;
+    }
+    .mockup-body { padding: 20px; display: grid; gap: 16px; }
+    .mockup-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .mockup-title { font-weight: 600; font-size: 14px; color: var(--text); }
+    .mockup-sub { font-size: 12px; color: var(--text-3); }
+    .mockup-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 500;
+      background: rgba(5, 150, 105, 0.10);
+      color: var(--success);
+    }
+    .mockup-pill::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--success); }
+    .mockup-pill.warn { background: rgba(245, 158, 11, 0.10); color: #B45309; }
+    .mockup-pill.warn::before { background: #F59E0B; }
+    .mockup-list {
+      display: grid;
+      gap: 8px;
+    }
+    .mockup-trip {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      padding: 12px;
+      align-items: center;
+      background: #FAFAFA;
+      border: 1px solid var(--border-2);
+      border-radius: 8px;
+    }
+    .mockup-avatar {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #F3F4F6, #E5E7EB);
+      display: inline-block;
+    }
+    .mockup-avatar.cairo  { background: linear-gradient(135deg, #FED7AA, #FB923C); }
+    .mockup-avatar.sharm  { background: linear-gradient(135deg, #BAE6FD, #38BDF8); }
+    .mockup-avatar.combo  { background: linear-gradient(135deg, #FECACA, #F87171); }
+    .mockup-avatar.hurg   { background: linear-gradient(135deg, #CCFBF1, #2DD4BF); }
+    .mockup-price {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .mockup-meta { font-size: 11.5px; color: var(--text-3); }
+
+    /* ─────────────────────────────────────────────────────────── */
+    /*  DESTINATIONS                                                */
+    /* ─────────────────────────────────────────────────────────── */
+    .destinations-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--border);
+    }
+    @media (max-width: 720px) { .destinations-grid { grid-template-columns: 1fr; } }
+    .dest {
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+      transition: padding-left 240ms ease;
+    }
+    .dest:nth-child(odd)  { padding-right: 40px; border-right: 1px solid var(--border); }
+    .dest:nth-child(even) { padding-left: 40px; }
+    @media (max-width: 720px) {
+      .dest, .dest:nth-child(odd) { border-right: none; padding-left: 0; padding-right: 0; }
+    }
+    .dest:hover { padding-left: 48px; }
+    .dest:nth-child(odd):hover { padding-left: 8px; }
+    .dest-num { font-size: 12px; color: var(--text-3); font-weight: 500; margin: 0 0 8px; letter-spacing: 0.04em; }
+    .dest-name { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 6px; line-height: 1.15; }
+    .dest-duration { font-size: 14px; color: var(--text-2); margin: 0; }
+    .dest-arrow {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--bg-elev);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-2);
+      transition: background 200ms, color 200ms, transform 200ms;
+    }
+    .dest:hover .dest-arrow { background: var(--text); color: var(--bg); transform: rotate(-45deg); }
+
+    /* ─────────────────────────────────────────────────────────── */
+    /*  FLOW (How it works)                                         */
+    /* ─────────────────────────────────────────────────────────── */
+    .flow { background: var(--bg-elev); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .flow-grid {
+      display: grid;
+      gap: 24px;
+    }
+    .flow-step {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 24px;
+      align-items: start;
+      padding: 24px 0;
+      border-top: 1px solid var(--border);
+    }
+    .flow-step:first-child { border-top: none; padding-top: 0; }
+    .flow-num {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .flow-content h3 { margin-bottom: 6px; }
+    .flow-content p { font-size: 15px; color: var(--text-2); max-width: 56ch; }
+
+    /* ─────────────────────────────────────────────────────────── */
+    /*  FEATURES                                                    */
+    /* ─────────────────────────────────────────────────────────── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px 56px;
+    }
+    @media (max-width: 880px) { .features-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; } }
+    @media (max-width: 560px) { .features-grid { grid-template-columns: 1fr; } }
+    .feat-icon {
+      width: 32px; height: 32px;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .feat-icon svg { width: 100%; height: 100%; }
+    .feature h3 { margin-bottom: 8px; }
+    .feature p { font-size: 14.5px; color: var(--text-2); }
+
+    /* ─────────────────────────────────────────────────────────── */
+    /*  TIERS                                                       */
+    /* ─────────────────────────────────────────────────────────── */
+    .tiers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 880px) { .tiers-grid { grid-template-columns: 1fr; } }
+    .tier {
+      padding: 32px 28px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg);
+      transition: border-color 200ms, transform 200ms;
+    }
+    .tier:hover { border-color: var(--text); }
+    .tier.featured { border-color: var(--text); }
+    .tier-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-3);
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
+    }
+    .tier-label::before {
+      content: ""; width: 7px; height: 7px; border-radius: 2px; background: var(--text-3);
+    }
+    .tier.bronze .tier-label::before { background: #B45309; }
+    .tier.silver .tier-label::before { background: #6B7280; }
+    .tier.gold   .tier-label::before { background: var(--accent); }
+    .tier h3 { font-size: 22px; margin-bottom: 8px; }
+    .tier-sub { font-size: 14px; color: var(--text-3); margin-bottom: 24px; }
+    .tier-perks { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .tier-perks li {
+      display: grid;
+      grid-template-columns: 16px 1fr;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+    .tier-perks li::before {
+      content: "";
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--text);
+      margin-top: 8px;
+    }
+
+    /* ─────────────────────────────────────────────────────────── */
+    /*  CLOSER                                                      */
+    /* ─────────────────────────────────────────────────────────── */
+    .closer {
+      background: var(--bg-dark);
+      color: var(--bg);
+      padding: 140px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .closer::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(184, 67, 12, 0.6), transparent);
+    }
+    .closer-inner { max-width: 720px; margin: 0 auto; text-align: center; }
+    .closer h2 {
+      color: var(--bg);
+      font-size: clamp(36px, 5vw, 56px);
+      margin-bottom: 20px;
+      letter-spacing: -0.025em;
+    }
+    .closer-sub {
+      font-size: 19px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 40px;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ─────────────────────────────────────────────────────────── */
+    /*  FOOTER                                                      */
+    /* ─────────────────────────────────────────────────────────── */
+    .footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-3);
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─────────── Nav ─────────── -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#hero" class="brand"><span class="brand-dot"></span>SAFIRMISR</a>
+      <div class="nav-links">
+        <a href="#product">Plateforme</a>
+        <a href="#destinations">Destinations</a>
+        <a href="#flow">Réservation</a>
+        <a href="#features">Fonctionnalités</a>
+        <a href="#closer" class="btn btn-primary">Accès partenaire</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─────────── 1. Hero ─────────── -->
+  <section class="hero" id="hero">
+    <div class="wrap">
+      <div class="hero-inner">
+        <span class="hero-eyebrow reveal">Plateforme B2B · Égypte</span>
+        <h1 class="reveal">La réservation Égypte, enfin structurée.</h1>
+        <p class="hero-sub reveal">SAFIRMISR centralise vos circuits, vos disponibilités et vos passagers dans une seule plateforme — pensée pour les agences qui vendent l'Égypte.</p>
+        <div class="hero-cta reveal">
+          <a href="#closer" class="btn btn-primary btn-lg">Demander un accès <span class="arrow">→</span></a>
+          <a href="#product" class="btn btn-ghost btn-lg">Voir la plateforme</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── 2. Product showcase ─────────── -->
+  <section class="showcase" id="product">
+    <div class="wrap showcase-grid">
+      <div class="showcase-copy">
+        <span class="eyebrow reveal">La plateforme</span>
+        <h2 class="reveal">Une infrastructure unique pour l'Égypte.</h2>
+        <p class="lede reveal">Toutes les opérations d'un dossier — du catalogue au voucher — dans une interface conçue pour la vitesse.</p>
+        <ul class="showcase-points reveal">
+          <li><span class="check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></span>Catalogue, disponibilités et tarifs en temps réel</li>
+          <li><span class="check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></span>Passeports centralisés, import Excel pour les groupes</li>
+          <li><span class="check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg></span>Voucher PDF et manifest passagers générés à la demande</li>
+        </ul>
+      </div>
+
+      <div class="mockup reveal" aria-hidden="true">
+        <div class="mockup-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="url">safirmisr.com / réservations</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-row">
+            <div>
+              <div class="mockup-title">Voyages disponibles</div>
+              <div class="mockup-sub">Départ : Octobre 2026</div>
+            </div>
+            <span class="mockup-pill">4 actifs</span>
+          </div>
+          <div class="mockup-list">
+            <div class="mockup-trip">
+              <span class="mockup-avatar cairo"></span>
+              <div>
+                <div class="mockup-title">Le Caire</div>
+                <div class="mockup-meta">5 nuits · double</div>
+              </div>
+              <div style="text-align:right">
+                <div class="mockup-price">980 €</div>
+                <div class="mockup-meta">/ pers.</div>
+              </div>
+            </div>
+            <div class="mockup-trip">
+              <span class="mockup-avatar sharm"></span>
+              <div>
+                <div class="mockup-title">Sharm el-Sheikh</div>
+                <div class="mockup-meta">7 nuits · all inclusive</div>
+              </div>
+              <div style="text-align:right">
+                <div class="mockup-price">1 140 €</div>
+                <div class="mockup-meta">/ pers.</div>
+              </div>
+            </div>
+            <div class="mockup-trip">
+              <span class="mockup-avatar combo"></span>
+              <div>
+                <div class="mockup-title">Caire + Sharm</div>
+                <div class="mockup-meta">9 nuits · combiné</div>
+              </div>
+              <div style="text-align:right">
+                <div class="mockup-price">1 720 €</div>
+                <div class="mockup-meta">/ pers.</div>
+              </div>
+            </div>
+          </div>
+          <div class="mockup-row" style="padding-top:8px;border-top:1px solid var(--border-2)">
+            <span class="mockup-pill warn">2 places restantes — Caire 10 oct</span>
+            <span class="mockup-sub">Mis à jour il y a 12 s</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── 3. Destinations ─────────── -->
+  <section id="destinations">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow reveal">Destinations</span>
+        <h2 class="reveal">Quatre circuits, une expertise.</h2>
+      </div>
+      <div class="destinations-grid">
+        <div class="dest reveal">
+          <div>
+            <div class="dest-num">01</div>
+            <h3 class="dest-name">Le Caire</h3>
+            <p class="dest-duration">4 à 6 nuits</p>
+          </div>
+          <span class="dest-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 11L11 3M11 3H5M11 3v6"/></svg></span>
+        </div>
+        <div class="dest reveal">
+          <div>
+            <div class="dest-num">02</div>
+            <h3 class="dest-name">Sharm el-Sheikh</h3>
+            <p class="dest-duration">6 à 9 nuits</p>
+          </div>
+          <span class="dest-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 11L11 3M11 3H5M11 3v6"/></svg></span>
+        </div>
+        <div class="dest reveal">
+          <div>
+            <div class="dest-num">03</div>
+            <h3 class="dest-name">Caire + Sharm</h3>
+            <p class="dest-duration">8 à 11 nuits · combiné</p>
+          </div>
+          <span class="dest-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 11L11 3M11 3H5M11 3v6"/></svg></span>
+        </div>
+        <div class="dest reveal">
+          <div>
+            <div class="dest-num">04</div>
+            <h3 class="dest-name">Hurghada</h3>
+            <p class="dest-duration">7 à 10 nuits · combinaisons</p>
+          </div>
+          <span class="dest-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 11L11 3M11 3H5M11 3v6"/></svg></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── 4. Flow ─────────── -->
+  <section class="flow" id="flow">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow reveal">Parcours</span>
+        <h2 class="reveal">Cinq étapes, dix minutes.</h2>
+        <p class="lede reveal" style="margin-top:20px">Du choix du voyage au voucher généré, sans appels ni emails croisés.</p>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-step reveal">
+          <span class="flow-num">1</span>
+          <div class="flow-content">
+            <h3>Choix du voyage</h3>
+            <p>Sélection du circuit et de la date de départ depuis le catalogue à jour.</p>
+          </div>
+        </div>
+        <div class="flow-step reveal">
+          <span class="flow-num">2</span>
+          <div class="flow-content">
+            <h3>Passagers</h3>
+            <p>Ajout des adultes et enfants au dossier, avec leurs informations de base.</p>
+          </div>
+        </div>
+        <div class="flow-step reveal">
+          <span class="flow-num">3</span>
+          <div class="flow-content">
+            <h3>Passeports</h3>
+            <p>Saisie manuelle ou import Excel pour les groupes — finie la chasse aux pièces jointes.</p>
+          </div>
+        </div>
+        <div class="flow-step reveal">
+          <span class="flow-num">4</span>
+          <div class="flow-content">
+            <h3>Chambres</h3>
+            <p>Attribution single, double ou triple. Le prix se met à jour automatiquement.</p>
+          </div>
+        </div>
+        <div class="flow-step reveal">
+          <span class="flow-num">5</span>
+          <div class="flow-content">
+            <h3>Voucher</h3>
+            <p>Confirmation et téléchargement du voucher PDF + manifest passagers.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── 5. Features ─────────── -->
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow reveal">Fonctionnalités</span>
+        <h2 class="reveal">Ce dont les agences ont vraiment besoin.</h2>
+      </div>
+      <div class="features-grid">
+        <div class="feature reveal">
+          <span class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <h3>Disponibilités temps réel</h3>
+          <p>Disponible · Bientôt complet · Complet — recalculés à chaque réservation.</p>
+        </div>
+        <div class="feature reveal">
+          <span class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h12"/></svg></span>
+          <h3>Calcul de prix instantané</h3>
+          <p>Par personne, par type de chambre. Plus de devis approximatifs.</p>
+        </div>
+        <div class="feature reveal">
+          <span class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M9 14l2 2 4-4"/></svg></span>
+          <h3>Import passeports Excel</h3>
+          <p>Charger 40 passagers d'un coup, sans saisie répétitive.</p>
+        </div>
+        <div class="feature reveal">
+          <span class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span>
+          <h3>Voucher &amp; manifest PDF</h3>
+          <p>Documents prêts à transmettre au tour-opérateur local.</p>
+        </div>
+        <div class="feature reveal">
+          <span class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg></span>
+          <h3>Historique &amp; suivi</h3>
+          <p>Tous les dossiers, leur statut, leur historique — accessibles à tout moment.</p>
+        </div>
+        <div class="feature reveal">
+          <span class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6 6 1-4.5 4 1 6L12 16l-5.5 3 1-6L3 9l6-1 3-6z"/></svg></span>
+          <h3>Programme partenaires</h3>
+          <p>Trois niveaux d'agence : Bronze, Silver, Gold. Avantages cumulatifs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── 6. Tiers ─────────── -->
+  <section id="tiers" style="background:var(--bg-elev);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow reveal">Programme partenaires</span>
+        <h2 class="reveal">Trois niveaux. Trois récompenses.</h2>
+      </div>
+      <div class="tiers-grid">
+        <div class="tier bronze reveal">
+          <div class="tier-label">Niveau 1</div>
+          <h3>Bronze</h3>
+          <p class="tier-sub">Niveau de départ</p>
+          <ul class="tier-perks">
+            <li>Accès complet à la plateforme</li>
+            <li>Tarifs standards</li>
+            <li>Support email</li>
+          </ul>
+        </div>
+        <div class="tier silver reveal">
+          <div class="tier-label">Niveau 2</div>
+          <h3>Silver</h3>
+          <p class="tier-sub">Intermédiaire</p>
+          <ul class="tier-perks">
+            <li>Tarifs préférentiels</li>
+            <li>Pré-réservations prioritaires</li>
+            <li>Support dédié</li>
+          </ul>
+        </div>
+        <div class="tier gold featured reveal">
+          <div class="tier-label">Niveau 3</div>
+          <h3>Gold</h3>
+          <p class="tier-sub">Premium</p>
+          <ul class="tier-perks">
+            <li>Meilleurs tarifs garantis</li>
+            <li>Accès prioritaire aux départs</li>
+            <li>Account manager dédié</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── 7. Closer ─────────── -->
+  <section class="closer" id="closer">
+    <div class="wrap closer-inner">
+      <h2 class="reveal">Prêt à structurer vos réservations Égypte ?</h2>
+      <p class="closer-sub reveal">Rejoignez SAFIRMISR et gérez tous vos voyages depuis une seule plateforme.</p>
+      <a href="mailto:contact@safirmisr.com" class="btn btn-primary btn-lg btn-on-dark reveal">Demander un accès partenaire <span class="arrow">→</span></a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span class="brand"><span class="brand-dot"></span>SAFIRMISR</span>
+      <span>© 2026 — La plateforme de réservation pour l'Égypte</span>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll state
+    const nav = document.getElementById('nav');
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Reveal on scroll
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reveals = document.querySelectorAll('.reveal');
+    if (reduced) {
+      reveals.forEach(el => el.classList.add('in-view'));
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const siblings = entry.target.parentElement.querySelectorAll(':scope > .reveal');
+            const idx = Array.prototype.indexOf.call(siblings, entry.target);
+            entry.target.style.transitionDelay = (Math.max(0, Math.min(idx, 5)) * 60) + 'ms';
+            entry.target.classList.add('in-view');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      reveals.forEach(el => io.observe(el));
+    }
+  </script>
+</body>
+</html>
